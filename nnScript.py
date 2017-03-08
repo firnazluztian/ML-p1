@@ -288,10 +288,6 @@ def nnPredict(w1, w2, data):
     # compute sigmoid of sig1*wtrans
     sig2 = sigmoid(ol)
     # selecting max value for predicted label
-    '''
-    for each in range(sig2.shape[0]):
-        labels[each] = np.argmax(sig2[each])
-    '''
     labels = np.argmax(sig2,axis=1)
 
     return labels
@@ -308,7 +304,7 @@ train_data, train_label, validation_data, validation_label, test_data, test_labe
 n_input = train_data.shape[1]
 
 # set the number of nodes in hidden unit (not including bias unit)
-n_hidden = 50
+n_hidden = 80 # 50 is the default
 
 # set the number of nodes in output unit
 n_class = 10
@@ -321,7 +317,7 @@ initial_w2 = initializeWeights(n_hidden, n_class)
 initialWeights = np.concatenate((initial_w1.flatten(), initial_w2.flatten()), 0)
 
 # set the regularization hyper-parameter
-lambdaval = 0
+lambdaval = 20 # 0 is the deault
 
 args = (n_input, n_hidden, n_class, train_data, train_label, lambdaval)
 
@@ -360,6 +356,8 @@ predicted_label = nnPredict(w1, w2, test_data)
 
 print('\n Test set Accuracy:' + str(100 * np.mean((predicted_label == test_label).astype(float))) + '%')
 
-getTime = time.time() - timer
-print('\n It took: ' + str(getTime) + ' seconds to complete')
+getTime = time.time()-timer
+print('\n It took: ' + str(getTime)+ 'seconds to complete')
 
+obj = [n_hidden, w1, w2, lambdaval ]
+pickle.dump(obj, open('params.pickle', 'wb'))
